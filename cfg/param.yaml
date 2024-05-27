@@ -3,5 +3,5 @@ depthimage_to_laserscan:
     scan_time: 0.033
     range_min: 0.45
     range_max: 10.0
-    scan_height: 1
+    scan_height: 0.5
     output_frame: "camera_depth_frame"

@@ -147,7 +147,7 @@ sensor_msgs::msg::LaserScan::UniquePtr DepthImageToLaserScan::convert_msg(
     static_cast<double>(scan_height_) / 2.0 > depth_msg->height - cam_model_.cy())
   {
     std::stringstream ss;
-    ss << "scan_height ( " << scan_height_ << " pixels) is too large for the image height.";
+    ss << "scan_height ( " << scan_height_ << " pixels) is too large for the image height. cam_model_.cy: " << cam_model_.cy() << "height: " << depth_msg->height << "";
     throw std::runtime_error(ss.str());
   }
 

@@ -48,7 +48,9 @@ namespace depthimage_to_laserscan
 DepthImageToLaserScanROS::DepthImageToLaserScanROS(const rclcpp::NodeOptions & options)
 : rclcpp::Node("depthimage_to_laserscan", options)
 {
-  auto qos = rclcpp::SystemDefaultsQoS();
+  auto qos = rclcpp::QoS(rclcpp::KeepLast(1));
+  qos.reliability(rclcpp::ReliabilityPolicy::BestEffort);
+  
   cam_info_sub_ = this->create_subscription<sensor_msgs::msg::CameraInfo>(
     "depth_camera_info", qos,
     std::bind(
@@ -65,10 +67,12 @@ DepthImageToLaserScanROS::DepthImageToLaserScanROS(const rclcpp::NodeOptions & o
   float scan_time = this->declare_parameter("scan_time", 0.033);
 
   float range_min = this->declare_parameter("range_min", 0.45);
-  float range_max = this->declare_parameter("range_max", 10.0);
+  float range_max = this->declare_parameter("range_max", 10);
 
-  int scan_height = this->declare_parameter("scan_height", 1);
-
+  int scan_height = this->declare_parameter("scan_height", 128);
+  
+  RCLCPP_INFO_STREAM_ONCE(this->get_logger(), "Scan height: " << scan_height);  
+  
   std::string output_frame = this->declare_parameter("output_frame", "camera_depth_frame");
 
   dtl_ = std::make_unique<depthimage_to_laserscan::DepthImageToLaserScan>(
